@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nearby Shops</title>
+<!--    Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+<!--    Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+<!--    Set map height -->
+    <style>
+        #mapid { height: 500px; }
+    </style>
+</head>
+<body>
+    <h2>Nearby Spots </h2>
+    <p>The data showed the nearest 6 points hotspots from your location.</p>
+<!--mapdiv -->
+    <div id="mapid"></div>
+<!--map js-->
+<script>
+    var locatex={{userlatitude}}
+    console.log(locatex)
+    var locatey={{userlongitude}}
+    console.log(locatey)
+    var map = L.map('mapid').setView([locatex, locatey], 16);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+
+    L.marker([locatex, locatey]).addTo(map)
+        .bindPopup('This is your location');
+    // for each shop do...
+
+    {% for shop in shops %}
+    var circle = L.circle([{{ shop.location.y }}, {{ shop.location.x }}], {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5,
+        radius: 7
+    }).addTo(map)
+    .bindPopup('distance from the point: {{ shop.distance }}');
+    {% endfor %}
+</script>
+
+</body>
+
+</html>
+
+{% endblock %}

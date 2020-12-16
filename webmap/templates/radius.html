@@ -1,0 +1,57 @@
+<!-- This is the page to generate 6 closest hotspots near a click location on a map. -->
+
+{% extends 'base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nearby Shops</title>
+<!--    Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+<!--    Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+<!--    Set map height -->
+    <style>
+        #mapid { height: 500px; }
+    </style>
+</head>
+<body>
+<!--mapdiv -->
+    <div id="mapid"></div>
+<!--map js-->
+<script>
+    var map = L.map('mapid').setView([3.0733, 101.5185], 17);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    map.on('click', function (e) {
+        coords= e.latlng.lat + ", " + e.latlng.lng;
+        console.log(coords);
+        document.getElementById( "user_lat" ).value = e.latlng.lat;
+        document.getElementById( "user_lng" ).value = e.latlng.lng;
+
+    });
+</script>
+</br>
+Please click on the map to find the hotspots nearby !!
+</br>
+</br>
+<form action="{% url 'radius'%}" method="POST">
+    {% csrf_token %}
+Latitude: <input type="number" id="user_lat" name="user_latitude" value="" step="any">
+Longitude: <input type="number" id="user_lng" name="user_longitude" value="" step="any">
+<input type="submit" value="Enter"/>
+<hr/>
+</form>
+</body>
+
+</html>
+
+{% endblock %}
